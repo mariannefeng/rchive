@@ -1,13 +1,15 @@
-(ns rchive.core
+(ns ^:figwheel-hooks
+  rchive.client.core
   (:require
    [reagent.core :as r]
-   [reagent.dom :as rdom]))
+   [bloom.omni.reagent :as rdom]))
 
-(defonce placard (r/atom {:placard/title "Octopiggy Bank"
-                          :placard/artists ["Rafal Dittwald" "Canna Wen" "John Lemme"]
-                          :placard/year "2026"
-                          :placard/materials "Plastic, 3d print, paint"
-                          :placard/description "...description TODO"}))
+(defonce placard
+  (r/atom {:placard/title "Octopiggy Bank"
+           :placard/artists ["Rafal Dittwald" "Canna Wen" "John Lemme"]
+           :placard/year "2026"
+           :placard/materials "Plastic, 3d print, paint"
+           :placard/description "...description TODO"}))
 
 
 (defn text-input
@@ -30,7 +32,7 @@
    [:div label]
    (for [[i item] (map-indexed vector (key @placard))]
      ^{:key i}
-     [:div 
+     [:div
       [:input {:tw "border block"
                     :value item
                     :on-change (fn [e]
@@ -47,15 +49,14 @@
 (defn app-view
   []
   [:div {:tw "flex gap-2"}
-   #_[:style {:media "print"}
-    "#form {display: none}"]
-   #_[:link {:href "/css/twstyles.css" :media "print" :rel "stylesheet"}]
-   
-   [:script {:src "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"}]
-   
+   [:style {:media "print"}
+    "print:hidden {display: none}"]
+
+   [:link {:href "/css/twstyles.css" :media "print" :rel "stylesheet"}]
+
    [:div#form
-    [:form {:class "print:hidden"}
-     
+    [:form {:tw "print:hidden"}
+
      [text-input {:label "Title"
                   :key :placard/title}]
      [array-input {:label "Artists"
@@ -66,13 +67,12 @@
                   :key :placard/materials}]
      [text-input {:label "Description"
                   :key :placard/description}]]
-    
+
     [:button {:on-click (fn [_]
                           (js/window.print))}
-     "Print"]
-    
-    ]
-   [:div {:class "p-2 border print:text-red-500"
+     "Print"]]
+
+   [:div {:tw "p-2 border text-red-500"
           :style {:width "50mm"}}
     [:div (:placard/title @placard)]
     [:div (for [[i item] (map-indexed vector (:placard/artists @placard))]
@@ -83,11 +83,12 @@
     [:div (:placard/year @placard)]]])
 
 (defn render []
-  (rdom/render [app-view] (js/document.getElementById "app")))
+  (rdom/render [app-view]))
 
-(defn reload
+(defn ^:after-load reload
   []
   (render))
 
-(defn -main []
+(defn ^:export init []
   (render))
+

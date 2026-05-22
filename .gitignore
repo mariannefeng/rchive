@@ -1,6 +1,9 @@
 /.calva
 /.clj-kondo
 /.lsp
+/.nrepl-port
+/.lein-repl-history
 /target
 /resources/public/js
+/resources/public/css
 figwheel_server.log

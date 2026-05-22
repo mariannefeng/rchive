@@ -1,18 +1,18 @@
 (defproject rchive "0.0.1"
-  :dependencies [[org.clojure/clojure "1.12.0"]
-                 [org.clojure/clojurescript "1.12.134"]
-                 [reagent "2.0.1"]
-                 [cljsjs/react "18.3.1-1"]
-                 [cljsjs/react-dom "18.3.1-1"]]
+  :dependencies [[io.bloomventures/omni "0.36.2"]
+                 ;; why???
+                 [org.clojure/tools.cli "1.4.256"]]
 
-  :plugins [[lein-figwheel "0.5.18"]]
+  :omni-config rchive.omni-config/omni-config
 
-  :jvm-opts ["--enable-native-access=ALL-UNNAMED"]
+  :plugins [[io.bloomventures/omni "0.36.2"]]
 
-  :cljsbuild {:builds [{:id "example"
-                        :source-paths ["src/"]
-                        :figwheel {:on-jsload "rchive.core/reload"}
-                        :compiler {:main "rchive.core"
-                                   :asset-path "js/out"
-                                   :output-to "resources/public/js/rchive.js"
-                                   :output-dir "resources/public/js/out"}}]})
+  :main rchive.core
+
+  :profiles {:dev
+             {:source-paths ["dev-src"]}
+             :uberjar
+             {:aot :all
+              :prep-tasks [["omni" "compile"]
+                           "compile"]}})
+
