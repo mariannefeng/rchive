@@ -1,0 +1,6 @@
+/.calva
+/.clj-kondo
+/.lsp
+/target
+/resources/public/js
+figwheel_server.log
