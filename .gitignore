@@ -1,3 +1,4 @@
+config.edn
 /.calva
 /.clj-kondo
 /.lsp
@@ -7,3 +8,4 @@
 /resources/public/js
 /resources/public/css
 figwheel_server.log
+.DS_Store
