@@ -1,5 +1,6 @@
 (defproject rchive "0.0.1"
   :dependencies [[io.bloomventures/omni "0.36.2"]
+                 [cljsjs/qrcode-generator "1.4.4-0"]
                  ;; why???
                  [org.clojure/tools.cli "1.4.256"]]
 

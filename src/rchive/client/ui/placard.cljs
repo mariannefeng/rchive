@@ -1,4 +1,6 @@
-(ns rchive.client.ui.placard)
+(ns rchive.client.ui.placard
+  (:require
+   [rchive.client.ui.rcqr :as rcqr]))
 
 (defn artists
   [placard]
@@ -46,11 +48,10 @@
     [materials placard]
     [:div {:tw "h-4"}]
 
-    [:div {:tw "flex gap-7"}
+    [:div {:tw "flex gap-10"}
      [description placard]
-     [:div {:tw "w-55"}
-      [:img {:tw "pt-2"
-             :src "/rc-qr.svg"}]]]]
+     [rcqr/rc-qr-code {:width "4.25rem"
+                       :text "a.rcdis.co/1234"}]]]
 
    [print-cut-markers]])
 
@@ -69,13 +70,15 @@
     [materials placard]
     [:div {:tw "h-4"}]
     [description placard]
+    [:div {:tw "h-20"}]
 
     [:div {:tw "flex justify-end"}
-     [:img {:tw "-mr-2 mt-20 w-22 h-22"
-            :src "/rc-qr.svg"}]]]
-
+     [rcqr/rc-qr-code {:width "4rem"
+                       :text "a.rcdis.co/1234"}]]]
    [print-cut-markers]])
 
-(def placard-view placard-vertical-no-stripe)
+(def placard-view
+  #_placard-horizontal-with-stripe
+  placard-vertical-no-stripe)
 
 
