@@ -2,7 +2,9 @@
   (:require
    [tada.events.core :as tada]
    [tada.events.ring :as tada.ring]
-   [rchive.db :as db]))
+   [rchive.db :as db]
+   [rchive.git :as git]
+   [rchive.config :as config]))
 
 (defonce t (tada/init :malli))
 
@@ -20,7 +22,17 @@
       (->> (db/all)
            (filter (fn [p]
                      (= id (:placard/id p))))
-           first))}])
+           first))}
+
+   {:id :api/update-placard!
+    :params {:placard db/Placard}
+    :effect (fn [{:keys [placard]}]
+              (db/update! placard)
+              (git/add-commit-and-push!
+               (assoc (config/get :git)
+                      :message (str "update placard " (:placard/id placard)))))}])
+
+
 
 (tada/register! t events)
 

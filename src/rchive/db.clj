@@ -1,7 +1,9 @@
 (ns rchive.db
   (:require
    [malli.core :as m]
-   [clojure.edn :as edn]))
+   [clojure.edn :as edn]
+   [bloom.commons.file-db :as fdb]
+   [rchive.config :as config]))
 
 (def Placard
   [:map
@@ -14,13 +16,9 @@
    [:placard/description :string]])
 
 (defn all []
-  (->> "placards.edn"
-       slurp
-       edn/read-string
+  (fdb/all {:data-path (:repo-dir (config/get :git))}))
 
-       cycle
-       (take 10)
+(defn update!
+  [placard]
+  (fdb/write-entity! {:data-path (:repo-dir (config/get :git))} placard))
 
-       (filter (fn [placard]
-                 (m/validate Placard placard)))
-       ))

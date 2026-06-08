@@ -6,6 +6,7 @@
                   :exclusions [org.clojure/clojure
                                metosin/malli
                                org.clojure/spec.alpha]]
+                 [clj-jgit "1.1.0" :exclusions [org.eclipse.jgit/org.eclipse.jgit.gpg.bc]]
                  ;; why???
                  [org.clojure/tools.cli "1.4.256"]]
 

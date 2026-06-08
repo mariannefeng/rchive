@@ -79,7 +79,13 @@
              :style {:color rc-green}
              :on-click (fn [_]
                          (js/window.print))}
-    "Print"]])
+    "Print"]
+   [:button {:tw "mt-4 w-full px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
+             :style {:color rc-green}
+             :on-click (fn [_]
+                         (remote/tada! [:api/update-placard! {:placard @*placard} ]))}
+    "Save"]
+   ])
 
 (defn page-view
   [[_ {:keys [id]}]]
