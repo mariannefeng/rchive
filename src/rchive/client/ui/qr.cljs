@@ -3,6 +3,27 @@
    [reagent.core :as r]
    [cljsjs.qrcode-generator]))
 
+(defn modules
+  [{:keys [text logical-width pad-count]}]
+  ;; see https://kazuhikoarase.github.io/qrcode-generator/js/demo/
+  (let [qr (doto (js/qrcode 1 "L")
+             (.addData text)
+             (.make))
+        pad-count (or pad-count 0)
+        module-count (.getModuleCount qr)
+        tile-size (/ logical-width
+                     (+ pad-count pad-count module-count))]
+    (for [row (range module-count)
+          col (range module-count)
+          :when (.isDark qr row col)]
+      ^{:key (str row "-" col)}
+      [:rect
+       {:x (+ (* col tile-size) (* pad-count tile-size))
+        :y (+ (* row tile-size) (* pad-count tile-size))
+        :width tile-size
+        :height tile-size
+        :fill "black"}])))
+
 (defn qr-code-view
   [{:keys [text size pad-count]}]
   ;; see https://kazuhikoarase.github.io/qrcode-generator/js/demo/
@@ -28,3 +49,6 @@
            :width tile-size
            :height tile-size
            :fill "black"}])])))
+
+
+
