@@ -34,7 +34,7 @@
    [:div {:tw "border-b border-l w-2 h-2 -top-2 -right-2 absolute hidden print:block"}]])
 
 (defn placard-horizontal-with-stripe
-  [placard]
+  [{:keys [show-qr?]} placard]
   [:div#placard
    {:tw "border relative m-4 print:border-transparent break-inside-avoid"}
 
@@ -46,17 +46,19 @@
     [title-and-year placard]
     [:div {:tw "h-1"}]
     [materials placard]
-    [:div {:tw "h-4"}]
 
-    [:div {:tw "flex gap-10"}
-     [description placard]
-     [rcqr/rc-qr-code {:width "4.25rem"
-                       :text "a.rcdis.co/1234"}]]]
+    (when show-qr?
+      [:<>
+       [:div {:tw "h-4"}]
+       [:div {:tw "flex gap-10"}
+        [description placard]
+        [rcqr/rc-qr-code {:width "4.25rem"
+                          :text "a.rcdis.co/1234"}]]])]
 
    [print-cut-markers]])
 
 (defn placard-vertical-no-stripe
-  [placard]
+  [{:keys [show-qr?]} placard]
   [:div#placard
    {:tw "border relative m-4 print:border-transparent break-inside-avoid inline-block"}
 
@@ -70,11 +72,13 @@
     [materials placard]
     [:div {:tw "h-4"}]
     [description placard]
-    [:div {:tw "h-20"}]
 
-    [:div {:tw "flex justify-end"}
-     [rcqr/rc-qr-code {:width "4rem"
-                       :text "a.rcdis.co/1234"}]]]
+    (when show-qr?
+      [:<>
+       [:div {:tw "h-20"}]
+       [:div {:tw "flex justify-end"}
+        [rcqr/rc-qr-code {:width "4rem"
+                          :text "a.rcdis.co/1234"}]]])]
    [print-cut-markers]])
 
 (def placard-view

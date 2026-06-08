@@ -1,6 +1,11 @@
 (defproject rchive "0.0.1"
   :dependencies [[io.bloomventures/omni "0.36.2"]
+                 [io.bloomventures/commons "0.17.1"]
                  [cljsjs/qrcode-generator "1.4.4-0"]
+                 [tada "0.3.0"
+                  :exclusions [org.clojure/clojure
+                               metosin/malli
+                               org.clojure/spec.alpha]]
                  ;; why???
                  [org.clojure/tools.cli "1.4.256"]]
 

@@ -30,9 +30,11 @@
               :height (str "calc(" h-squares "/" w-squares " * " width ")")}
       :view-box (str "0 0 " w-squares " " h-squares)}
      (for [[y row] (map-indexed vector rc-frame)]
+       ^{:key y}
        [:<>
         (for [[x cell] (map-indexed vector row)]
           (when (= cell 1)
+            ^{:key x}
             [:rect
              {:x x
               :y y
