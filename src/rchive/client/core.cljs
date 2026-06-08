@@ -13,17 +13,29 @@
                                    "Rafal Dittwald"
                                    "Canna Wen"]
                  :placard/year "2026"
-                 :placard/materials "PLA, paint, scavenged plastic sphere"
+                 :placard/materials "PLA, paint, plastic sphere scavenged from H&M's garbage"
                  :placard/description "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."})
+
+(def rc-green "#23a050")
 
 (defn text-input
   [{:keys [key label]}]
   [:label {:tw "block"}
-   [:div label]
-   [:input {:tw "border"
+   [:div {:tw "text-sm font-medium mb-0.5"} label]
+   [:input {:tw "w-full rounded bg-white text-black px-2 py-1"
             :value (key @placard)
             :on-change (fn [e]
                          (swap! placard assoc key (.. e -target -value)))}]])
+
+(defn textarea-input
+  [{:keys [key label rows] :or {rows 4}}]
+  [:label {:tw "block"}
+   [:div {:tw "text-sm font-medium mb-0.5"} label]
+   [:textarea {:tw "w-full rounded bg-white text-black px-2 py-1 resize-y"
+               :rows rows
+               :value (key @placard)
+               :on-change (fn [e]
+                            (swap! placard assoc key (.. e -target -value)))}]])
 
 (defn remove-index
   [v i]
@@ -32,27 +44,30 @@
 
 (defn array-input
   [{:keys [key label]}]
-  [:label {:tw "block"}
-   [:div label]
+  [:div
+   [:div {:tw "text-sm font-medium mb-0.5"} label]
    (for [[i item] (map-indexed vector (key @placard))]
      ^{:key i}
-     [:div
-      [:input {:tw "border block"
-                    :value item
-                    :on-change (fn [e]
-                                 (swap! placard assoc-in [key i] (.. e -target -value)))}]
+     [:div {:tw "flex items-center gap-1 mb-1"}
+      [:input {:tw "flex-1 rounded bg-white text-black px-2 py-1"
+               :value item
+               :on-change (fn [e]
+                            (swap! placard assoc-in [key i] (.. e -target -value)))}]
       [:button {:type "button"
+                :tw "px-2 py-1 bg-white/20 rounded hover:bg-white/30"
                 :on-click (fn [_]
-                            (swap! placard update :placard/artists remove-index i))} "-"]])
+                            (swap! placard update key remove-index i))} "−"]])
    [:button {:type "button"
+             :tw "text-sm px-2 py-0.5 bg-white/20 rounded hover:bg-white/30"
              :on-click (fn [_]
-                         (swap! placard update :placard/artists conj ""))} "+"]])
+                         (swap! placard update key conj ""))} "+"]])
 
 (defn form-view
   []
-  [:div#form {:tw "print:hidden"}
-   [:form
+  [:div#form {:tw "print:hidden text-white p-4"
+              :style {:background rc-green}}
 
+   [:form {:tw "space-y-3 min-w-120"}
     [text-input {:label "Title"
                  :key :placard/title}]
     [array-input {:label "Artists"
@@ -61,10 +76,12 @@
                  :key :placard/year}]
     [text-input {:label "Materials"
                  :key :placard/materials}]
-    [text-input {:label "Description"
-                 :key :placard/description}]]
+    [textarea-input {:label "Description"
+                     :key :placard/description}]]
 
-   [:button {:on-click (fn [_]
+   [:button {:tw "mt-4 w-full px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
+             :style {:color rc-green}
+             :on-click (fn [_]
                          (js/window.print))}
     "Print"]])
 
