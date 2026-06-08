@@ -96,7 +96,7 @@
                font-family: \"Libre Franklin\", sans-serif;
                }"]
     [:style {:media "print"}
-     ".print\\:hidden {display: none}
+     ".print\\:hidden {display: none !important}
      .print\\:border-transparent {border-color: transparent}
      .print\\:block {display: block !important}"]
 
