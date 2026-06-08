@@ -13,8 +13,13 @@
      [:div
       [placard/placard-view {:show-qr? false} @*placard]
 
-      [:a {:href (pages/path-for [:page/editor {:id id}])}
-       "Edit"]])))
+      [:div
+       [:a {:href (pages/path-for [:page/gallery])}
+        "Back to All"]]
+
+      [:div
+       [:a {:href (pages/path-for [:page/editor {:id id}])}
+        "Edit"]]])))
 
 (pages/register-page!
  {:page/id :page/placard
