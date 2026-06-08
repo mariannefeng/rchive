@@ -75,17 +75,21 @@
 
    [:div {:tw "grow"}]
 
-   [:button {:tw "mt-4 w-full px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
-             :style {:color rc-green}
-             :on-click (fn [_]
-                         (js/window.print))}
-    "Print"]
-   [:button {:tw "mt-4 w-full px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
-             :style {:color rc-green}
-             :on-click (fn [_]
-                         (remote/tada! [:api/update-placard! {:placard @*placard} ]))}
-    "Save"]
-   ])
+   [:div {:tw "flex gap-4 items-center mt-4"}
+    [:a {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
+
+         :href (pages/path-for [:page/placard {:id (:placard/id @*placard)}])}
+     "Close"]
+    [:button {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
+              :on-click (fn [_]
+                          (js/window.print))}
+     "Print"]
+    [:div {:tw "grow"}]
+    [:button {:tw "px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
+              :style {:color rc-green}
+              :on-click (fn [_]
+                          (remote/tada! [:api/update-placard! {:placard @*placard}]))}
+     "Save"]]])
 
 (defn page-view
   [[_ {:keys [id]}]]
