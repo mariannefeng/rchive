@@ -1,6 +1,13 @@
 (ns rchive.client.ui.placard
   (:require
-   [rchive.client.ui.rcqr :as rcqr]))
+   [rchive.client.ui.rcqr :as rcqr]
+   [rchive.client.remote :as remote]))
+
+(defonce config (remote/tada-atom [:api/config]))
+(defn url [shortcode]
+  (str (:config/qr-base-domain @config)
+       "/"
+       shortcode))
 
 (defn artists
   [placard]
@@ -53,7 +60,7 @@
        [:div {:tw "flex gap-10"}
         [description placard]
         [rcqr/rc-qr-code {:width "4.25rem"
-                          :text "a.rcdis.co/1234"}]]])]
+                          :text (url (:placard/shortcode placard))}]]])]
 
    [print-cut-markers]])
 
@@ -78,7 +85,7 @@
        [:div {:tw "h-20"}]
        [:div {:tw "flex justify-end"}
         [rcqr/rc-qr-code {:width "4rem"
-                          :text "a.rcdis.co/1234"}]]])]
+                          :text (url (:placard/shortcode placard))}]]])]
    [print-cut-markers]])
 
 (def placard-view

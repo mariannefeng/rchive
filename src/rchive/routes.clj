@@ -9,7 +9,13 @@
 (defonce t (tada/init :malli))
 
 (def events
-  [{:id :api/placards
+  [{:id :api/config
+    :return
+    (fn [_]
+      {:config/qr-base-domain
+       (config/get :qr-base-domain)})}
+
+   {:id :api/placards
     :return
     (fn [_]
       (db/all))}
