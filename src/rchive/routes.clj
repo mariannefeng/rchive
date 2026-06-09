@@ -2,14 +2,26 @@
   (:require
    [tada.events.core :as tada]
    [tada.events.ring :as tada.ring]
+   [ring.middleware.oauth2 :as oauth]
    [rchive.db :as db]
+   [rchive.rcapi :as rcapi]
    [rchive.git :as git]
    [rchive.config :as config]))
 
 (defonce t (tada/init :malli))
 
 (def events
-  [{:id :api/config
+  [{:id :api/user
+    :params {:token [:maybe :any]}
+    :return
+    (fn [{:keys [token]}]
+      (rcapi/me token))}
+
+
+   ;; PUBLIC
+   ;; anyone can view all the placards
+
+   {:id :api/config
     :return
     (fn [_]
       {:config/qr-base-domain
@@ -30,13 +42,20 @@
                      (= id (:placard/id p))))
            first))}
 
+   ;; RESTRICTED
+
+   ;; for these, just assuming that having a token set is good enough
+   ;; (token may have expired, but we're not using it)
+
    {:id :api/create-placard!
+    :params {:token :string}
     :effect (fn [_]
               {:id (db/create!)})
     :return :tada/effect-return}
 
    {:id :api/update-placard!
-    :params {:placard db/Placard}
+    :params {:token :string
+             :placard db/Placard}
     :effect (fn [{:keys [placard]}]
               (db/update! placard)
               (git/add-commit-and-push!
@@ -55,12 +74,46 @@
          t
          id
          (-> params
-             (assoc :user-id (get-in request [:session :id]))))
+             ;; must be assoced after
+             ;; or else someone can sneak a token in via other params
+             (assoc :token
+                    (get-in request [:session :token]))))
         (throw (ex-info "Incorrect TADA params" {}))))))
 
+(defn oauth-middleware
+  [handler]
+  (oauth/wrap-oauth2 handler {:rc (config/get :oauth)}))
+
+;; after oauth (:session request) contains:
+#_{:ring.middleware.oauth2/access-tokens
+   {:rc
+    {:token "REDACTED"
+     :extra-data {:token_type "Bearer"
+                  :scope "public"
+                  :created_at 1781026058}
+     :expires #inst "2026-06-09T19:27:38.392-00:00"
+     :refresh-token "REDACTED"}}}
 
 (def routes
   [
+   [[:get "/oauth/log-out"]
+    (fn [_]
+      {:status 302
+       :session nil
+       :headers {"Location" "/"}})]
+
+   ;; hack to get oauth-middleware integrated with omni
+   [[:any "/oauth/*"]
+    (fn [_])
+    [oauth-middleware]]
+
+   [[:get "/oauth/rc/upgrade"]
+    (fn [request]
+      {:status 302
+       :session {:token (get-in request [:session ::oauth/access-tokens :rc :token])}
+       :headers {"Location" "/"}})
+    [oauth-middleware]]
+
    ;; generic tada handler
    [[:post "/api/tada/*"]
     ;; expects body to have {:event-id _ :event-params _}

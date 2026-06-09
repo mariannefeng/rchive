@@ -3,6 +3,7 @@
   (:require
    [bloom.omni.reagent :as rdom]
    [bloom.commons.pages :as pages]
+   [rchive.client.auth :as auth]
    ;; register pages:
    [rchive.client.pages.editor]
    [rchive.client.pages.gallery]
@@ -10,7 +11,9 @@
 
 (defn app-view
   []
-  [pages/current-page-view])
+  [:div
+   [auth/auth-view]
+   [pages/current-page-view]])
 
 (defn render []
   (rdom/render [app-view]))

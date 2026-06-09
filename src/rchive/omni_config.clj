@@ -11,5 +11,6 @@
    :omni/css {:tailwind? true}
    :omni/js-scripts []
    :omni/auth {:cookie {:name "rchive"
+                        :same-site :lax ;; for oauth :(
                         :secret (config/get :auth-cookie-secret)}}
    :omni/api-routes #'routes/routes})
