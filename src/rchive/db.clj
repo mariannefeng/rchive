@@ -18,6 +18,7 @@
    [:placard/materials :string]
    [:placard/description :string]])
 
+(def shortcode-re #"[a-zA-Z0-9]{4}")
 (def shortcode-chars "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 (def shortcode-length 4)
 
@@ -29,6 +30,14 @@
 
 (defn all []
   (fdb/all {:data-path (:repo-dir (config/get :git))}))
+
+(defn by-shortcode
+  [shortcode]
+  (->> (all)
+       (filter (fn [p]
+                 (= (:placard/shortcode p)
+                    shortcode)))
+       first))
 
 (defn new-unique-shortcode []
   (let [existing (->> (all)

@@ -66,5 +66,16 @@
     ;; expects body to have {:event-id _ :event-params _}
     (make-tada-handler :body-params)
     ]
-   ]
-  )
+
+   [[:get "/:shortcode"]
+    (fn [request]
+      (let [shortcode (get-in request [:params :shortcode])]
+        (if (re-matches db/shortcode-re shortcode)
+          (if-let [placard (db/by-shortcode shortcode)]
+            {:status 302
+             :headers {"Location" (str "/placard/" (:placard/id placard))}}
+            {:status 404
+             :headers {"Content-Type" "text/html"}
+             :body "Whoops, this placard is unknown. <a href=\"/\">Show All</a>."})
+          ;; otherwise, fall through to next request handler
+          )))]])
