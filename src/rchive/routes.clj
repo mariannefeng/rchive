@@ -34,8 +34,8 @@
     :effect (fn [{:keys [placard]}]
               (db/update! placard)
               (git/add-commit-and-push!
-               (assoc (config/get :git)
-                      :message (str "update placard " (:placard/id placard)))))}])
+               (config/get :git)
+               (str "update placard " (:placard/id placard))))}])
 
 (tada/register! t events)
 

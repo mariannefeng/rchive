@@ -9,6 +9,16 @@
 (def memo-repo
   (memoize repo))
 
+(def GitConfig
+  [:map
+   [:committer-name :string]
+   [:committer-email :string]
+   [:author-email :string]
+   [:author-name :string]
+   [:repo-dir :string]
+   [:ssh-key-dir :string]
+   [:ssh-key-name :string]])
+
 (defn add-commit-and-push!
   [{:keys [committer-name
            committer-email
@@ -16,8 +26,8 @@
            author-email
            repo-dir
            ssh-key-dir
-           ssh-key-name
-           message]}]
+           ssh-key-name]}
+   message]
   (git/git-add (memo-repo repo-dir) ".")
   (git/git-commit (memo-repo repo-dir)
                   message
@@ -32,13 +42,12 @@
                       :trust-all? true}
     (git/git-push (memo-repo repo-dir))))
 
-
-
-#_(add-commit-and-push! {:committer-name "rchivebot"
-                         :committer-email "rchive@recurse.com"
-                         :author-email "feng.marianne@gmail.com"
-                         :author-name "mariannefeng"
-                         :repo-dir "data"
-                         :ssh-key-dir "ssh"
-                         :ssh-key-name "github"
-                         :message "im a commit"})
+#_(add-commit-and-push!
+   {:committer-name "rchivebot"
+    :committer-email "rchive@recurse.com"
+    :author-email "feng.marianne@gmail.com"
+    :author-name "mariannefeng"
+    :repo-dir "data"
+    :ssh-key-dir "ssh"
+    :ssh-key-name "github"}
+   "im a commit")
