@@ -53,7 +53,7 @@
 
 (defn form-view
   [*placard]
-  [:div#form {:tw "print:hidden text-white p-6 h-screen flex flex-col"
+  [:div#form {:tw "print:hidden text-white p-6 h-screen flex flex-col overflow-y-auto"
               :style {:background rc-green}}
 
    [:form {:tw "space-y-3 min-w-120"}
