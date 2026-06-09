@@ -12,7 +12,14 @@
     (for [placard @*placards]
       ^{:key (:placard/id placard)}
       [:a {:href (pages/path-for [:page/placard {:id (:placard/id placard)}])}
-       (:placard/title placard)])]))
+       (:placard/title placard)])
+
+    [:button
+     {:on-click (fn []
+                  (-> (remote/tada! [:api/create-placard!])
+                      (.then (fn [{:keys [id]}]
+                               (pages/navigate-to! [:page/editor {:id id}])))))}
+     "Add a Placard"]]))
 
 (pages/register-page!
  {:page/id :page/gallery
