@@ -2,7 +2,6 @@
   "version": "1.0",
   "services": {
     "web": {
-      "image": "mendhak/http-https-echo",
       "port": 8080,
       "volumes": [
         {
