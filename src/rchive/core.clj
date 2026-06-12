@@ -5,7 +5,7 @@
     [rchive.omni-config :refer [omni-config]]))
 
 (defn start! []
-  (omni/start! omni-config))
+  (omni/start! @omni-config))
 
 (defn stop! []
   (omni/stop!))

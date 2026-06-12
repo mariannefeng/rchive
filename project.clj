@@ -11,7 +11,7 @@
                  ;; why???
                  [org.clojure/tools.cli "1.4.256"]]
 
-  :omni-config rchive.omni-config/omni-config
+  :omni-config rchive.omni-config/omni-config-hack
 
   :plugins [[io.bloomventures/omni "0.36.2"]]
 

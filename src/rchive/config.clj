@@ -21,15 +21,17 @@
     [:landing-uri RelativeURL]])
 
 (def config
-  (config/read
-   "config.edn"
-   [:map
-    [:http-port :int]
-    [:environment [:enum :prod :dev]]
-    [:auth-cookie-secret :string] ;; 16 chars
-    [:qr-base-domain :string]
-    [:git git/GitConfig]
-    [:oauth OauthConfig]]))
+  (delay
+    (config/read
+     (or (System/getenv "CONFIG_PATH")
+         "config.edn")
+     [:map
+      [:http-port :int]
+      [:environment [:enum :prod :dev]]
+      [:auth-cookie-secret :string] ;; 16 chars
+      [:qr-base-domain :string]
+      [:git git/GitConfig]
+      [:oauth OauthConfig]])))
 
 (defn get [k]
-  (clojure.core/get config k))
+  (clojure.core/get @config k))

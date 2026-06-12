@@ -4,13 +4,18 @@
     [rchive.routes :as routes]))
 
 (def omni-config
-  {:omni/http-port (config/get :http-port)
-   :omni/title "RChive"
-   :omni/environment (config/get :environment)
-   :omni/cljs {:main "rchive.client.core"}
-   :omni/css {:tailwind? true}
-   :omni/js-scripts []
-   :omni/auth {:cookie {:name "rchive"
-                        :same-site :lax ;; for oauth :(
-                        :secret (config/get :auth-cookie-secret)}}
-   :omni/api-routes #'routes/routes})
+  (delay
+    {:omni/http-port (config/get :http-port)
+     :omni/title "RChive"
+     :omni/environment (config/get :environment)
+     :omni/cljs {:main "rchive.client.core"}
+     :omni/css {:tailwind? true}
+     :omni/js-scripts []
+     :omni/auth {:cookie {:name "rchive"
+                          :same-site :lax ;; for oauth :(
+                          :secret (config/get :auth-cookie-secret)}}
+     :omni/api-routes #'routes/routes}))
+
+(def omni-config-hack
+  {:omni/environment :prod
+   :omni/css {:tailwind? true}})
