@@ -3,6 +3,9 @@
   "services": {
     "web": {
       "port": 8000,
+      "health": {
+          "command": "exit 0"
+      },
       "volumes": [
         {
           "name": "data",
