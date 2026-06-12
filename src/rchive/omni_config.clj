@@ -18,4 +18,5 @@
 
 (def omni-config-hack
   {:omni/environment :prod
+   :omni/cljs {:main "rchive.client.core"}
    :omni/css {:tailwind? true}})
