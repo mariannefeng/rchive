@@ -4,7 +4,7 @@
     "web": {
       "port": 8000,
       "health": {
-          "command": "exit 0"
+          "command": "curl -f http://example.com || exit 1"
       },
       "volumes": [
         {
