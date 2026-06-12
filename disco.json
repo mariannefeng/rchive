@@ -2,10 +2,8 @@
   "version": "1.0",
   "services": {
     "web": {
-      "port": 8000,
-      "health": {
-          "command": "curl -f http://example.com || exit 1"
-      },
+      "image": "mendhak/http-https-echo",
+      "port": 8080,
       "volumes": [
         {
           "name": "data",
