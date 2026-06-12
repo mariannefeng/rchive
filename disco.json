@@ -9,6 +9,16 @@
           "destinationPath": "/app/volume"
         }
       ]
+    },
+    "hook:deploy:start:before": {
+      "type": "command",
+      "command": "mkdir /app/volume/ssh",
+      "volumes": [
+        {
+          "name": "data",
+          "destinationPath": "/app/volume"
+        }
+      ]
     }
   }
 }
