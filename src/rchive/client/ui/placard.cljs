@@ -92,4 +92,16 @@
   #_placard-horizontal-with-stripe
   placard-vertical-no-stripe)
 
-
+(defn placard-simple
+  [placard]
+  [:div#placard
+   {:tw "border relative m-4"
+    :style {:min-width "100mm"}}
+   [:div {:tw "p-5 box-content bg-white"}
+    [artists placard]
+    [:div {:tw "text-xl"}
+     [:span {:tw "font-bold"}
+      (:placard/title placard) ", "]
+     [:span {:tw "font-thin"}
+      (:placard/year placard)]]]]
+  )
