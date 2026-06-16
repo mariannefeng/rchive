@@ -53,43 +53,49 @@
 
 (defn form-view
   [*placard]
-  [:div#form {:tw "print:hidden text-white p-6 h-screen flex flex-col overflow-y-auto"
-              :style {:background rc-green}}
+  (r/with-let [*saving? (r/atom false)]  
+    [:div#form {:tw "print:hidden text-white p-6 h-screen flex flex-col overflow-y-auto"
+                :style {:background rc-green}}
 
-   [:form {:tw "space-y-3 min-w-120"}
-    [text-input {:label "Title"
-                 :*placard *placard
-                 :key :placard/title}]
-    [array-input {:label "Artists"
-                  :*placard *placard
-                  :key :placard/artists}]
-    [text-input {:label "Year"
-                 :*placard *placard
-                 :key :placard/year}]
-    [text-input {:label "Materials"
-                 :*placard *placard
-                 :key :placard/materials}]
-    [textarea-input {:label "Description"
-                     :*placard *placard
-                     :key :placard/description}]]
+     [:form {:tw "space-y-3 min-w-120"}
+      [text-input {:label "Title"
+                   :*placard *placard
+                   :key :placard/title}]
+      [array-input {:label "Artists"
+                    :*placard *placard
+                    :key :placard/artists}]
+      [text-input {:label "Year"
+                   :*placard *placard
+                   :key :placard/year}]
+      [text-input {:label "Materials"
+                   :*placard *placard
+                   :key :placard/materials}]
+      [textarea-input {:label "Description"
+                       :*placard *placard
+                       :key :placard/description}]]
 
-   [:div {:tw "grow"}]
+     [:div {:tw "grow"}]
 
-   [:div {:tw "flex gap-4 items-center mt-4"}
-    [:a {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
+     [:div {:tw "flex gap-4 items-center mt-4"}
+      [:a {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
 
-         :href (pages/path-for [:page/placard {:id (:placard/id @*placard)}])}
-     "Close"]
-    [:button {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
-              :on-click (fn [_]
-                          (js/window.print))}
-     "Print"]
-    [:div {:tw "grow"}]
-    [:button {:tw "px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
-              :style {:color rc-green}
-              :on-click (fn [_]
-                          (remote/tada! [:api/update-placard! {:placard @*placard}]))}
-     "Save"]]])
+           :href (pages/path-for [:page/placard {:id (:placard/id @*placard)}])}
+       "Close"]
+      [:button {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
+                :on-click (fn [_]
+                            (js/window.print))}
+       "Print"]
+      [:div {:tw "grow"}]
+      [:button {:tw "px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
+                :style {:color (if @*saving? "gray" rc-green)}
+                :disabled @*saving?
+                :on-click (fn [_]
+                            (reset! *saving? true)
+                            (-> (remote/tada! [:api/update-placard! {:placard @*placard}])
+                                (.then (fn [_]
+                                         (reset! *saving? false))))
+                            )}
+       (if @*saving? "Loading..." "Save")]]]))
 
 (defn page-view
   [[_ {:keys [id]}]]
