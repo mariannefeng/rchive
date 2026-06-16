@@ -10,3 +10,6 @@
            :oauth-token token})
         :body
         (json/parse-string keyword))))
+
+(def memo-me
+  (memoize me))
