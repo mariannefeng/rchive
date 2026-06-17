@@ -19,7 +19,8 @@
                          (.then (fn [{:keys [id]}]
                                   (pages/navigate-to! [:page/editor {:id id}])))))}
         "Add a Placard"]
-       [:button {:on-click (fn [_]
+       [:button {:tw "bg-yellow-600 rounded text-white px-1 mt-2 ml-2"
+                 :on-click (fn [_]
                              (auth/auth!))}
         "Log In to Add a Placard"])
      [:div {:tw "flex flex-wrap"}

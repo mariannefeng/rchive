@@ -12,19 +12,24 @@
    [*placard (remote/tada-atom [:api/placard {:id id}])]
    (when @*placard
      [:div
-      [placard/placard-view {:show-qr? false} @*placard]
+      [:div {:tw "m-2"}
+       [:a {:tw "bg-#23a050 rounded text-white px-2 py-1 mr-2"
+            :href (pages/path-for [:page/gallery])}
+        "Back to All"]
 
-      [:div
-       [:a {:href (pages/path-for [:page/gallery])}
-        "Back to All"]]
 
-
-      [:div
        (if (auth/authed?)
-         [:a {:href (pages/path-for [:page/editor {:id id}])}
+         [:a {:tw "bg-#23a050 rounded text-white px-2 py-1"
+              :href (pages/path-for [:page/editor {:id id}])}
           "Edit"]
-         [:a {:href auth/auth-path}
-          "Log In to Edit"])]])))
+         [:a {:tw "bg-yellow-600 rounded text-white px-2 py-1"
+              :href auth/auth-path}
+          "Log In to Edit"])]
+
+      [placard/placard-view {:show-qr? false} @*placard]])))
+
+
+ 
 
 (pages/register-page!
  {:page/id :page/placard
