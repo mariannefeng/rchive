@@ -18,8 +18,8 @@
                      (-> (remote/tada! [:api/create-placard!])
                          (.then (fn [{:keys [id]}]
                                   (pages/navigate-to! [:page/editor {:id id}])))))}
-        "Add a Placard"]
-       [:button {:tw "bg-yellow-600 rounded text-white px-1 mt-2 ml-2"
+        "+ Add a Placard"]
+       [:button {:tw "bg-#23a050 rounded text-white px-1 mt-2 ml-2"
                  :on-click (fn [_]
                              (auth/auth!))}
         "Log In to Add a Placard"])
