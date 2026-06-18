@@ -53,7 +53,7 @@
 
 (defn form-view
   [*placard]
-  (r/with-let [*saving? (r/atom false)]  
+  (r/with-let [*saving? (r/atom false)]
     [:div#form {:tw "print:hidden text-white p-6 h-screen flex flex-col overflow-y-auto"
                 :style {:background rc-green}}
 
@@ -87,15 +87,18 @@
        "Print"]
       [:div {:tw "grow"}]
       [:button {:tw "px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
-                :style {:color (if @*saving? "gray" rc-green)}
+                :style {:color (if @*saving?
+                                 "gray"
+                                 rc-green)}
                 :disabled @*saving?
                 :on-click (fn [_]
                             (reset! *saving? true)
                             (-> (remote/tada! [:api/update-placard! {:placard @*placard}])
                                 (.then (fn [_]
-                                         (reset! *saving? false))))
-                            )}
-       (if @*saving? "Loading..." "Save")]]]))
+                                         (reset! *saving? false)))))}
+       (if @*saving?
+         "Loading..."
+         "Save")]]]))
 
 (defn page-view
   [[_ {:keys [id]}]]

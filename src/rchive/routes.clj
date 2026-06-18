@@ -58,9 +58,10 @@
              :placard db/Placard}
     :effect (fn [{:keys [placard token]}]
               (db/update! placard)
-              (let [git-config (assoc (config/get :git)
-                                      :author-email (:email (rcapi/memo-me token))
-                                      :author-name (str (:first_name (rcapi/memo-me token)) " " (:last_name (rcapi/memo-me token))))]
+              (let [{:keys [email first_name last_name]} (rcapi/memo-me token)
+                    git-config (assoc (config/get :git)
+                                      :author-email email
+                                      :author-name (str first_name " " last_name))]
                 (git/add-commit-and-push! git-config
                 (str "update placard " (:placard/id placard)))))}])
 
@@ -120,7 +121,7 @@
    [[:post "/api/tada/*"]
     ;; expects body to have {:event-id _ :event-params _}
     (make-tada-handler :body-params)]
-    
+
 
    [[:get "/:shortcode"]
     (fn [request]
@@ -131,6 +132,7 @@
              :headers {"Location" (str "/placard/" (:placard/id placard))}}
             {:status 404
              :headers {"Content-Type" "text/html"}
-             :body "Whoops, this placard is unknown. <a href=\"/\">Show All</a>."}))))]])
+             :body "Whoops, this placard is unknown. <a href=\"/\">Show All</a>."})
           ;; otherwise, fall through to next request handler
-          
+          nil)))]])
+
