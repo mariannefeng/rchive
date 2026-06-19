@@ -11,18 +11,16 @@
   (r/with-let
     [*placards (remote/tada-atom [:api/placards])]
     [:div
-     (if (auth/authed?)
-       [:button 
-        {:tw "bg-#23a050 rounded text-white px-1 mt-2 ml-2"
-        :on-click (fn []
+     [:button
+      {:tw "bg-#23a050 rounded text-white px-1 mt-2 ml-2"
+       :on-click (fn []
+                   (if (auth/authed?)
                      (-> (remote/tada! [:api/create-placard!])
                          (.then (fn [{:keys [id]}]
-                                  (pages/navigate-to! [:page/editor {:id id}])))))}
-        "+ Add a Placard"]
-       [:button {:tw "bg-#23a050 rounded text-white px-1 mt-2 ml-2"
-                 :on-click (fn [_]
-                             (auth/auth!))}
-        "Log In to Add a Placard"])
+                                  (pages/navigate-to! [:page/editor {:id id}]))))
+                     (when (js/confirm "You need to be logged in to add a placard. Proceed to Recurse oAuth?")
+                       (auth/auth!))))}
+      "+ Add a Placard"]
      [:div {:tw "flex flex-wrap"}
       (for [placard @*placards]
         ^{:key (:placard/id placard)}

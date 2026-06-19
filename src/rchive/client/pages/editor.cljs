@@ -2,6 +2,7 @@
   (:require
    [bloom.commons.pages :as pages]
    [reagent.core :as r]
+   [rchive.client.auth :as auth]
    [rchive.client.remote :as remote]
    [rchive.client.ui.placard :as ui.p]))
 
@@ -57,22 +58,37 @@
     [:div#form {:tw "print:hidden text-white p-6 h-screen flex flex-col overflow-y-auto"
                 :style {:background rc-green}}
 
-     [:form {:tw "space-y-3 min-w-120"}
-      [text-input {:label "Title"
-                   :*placard *placard
-                   :key :placard/title}]
-      [array-input {:label "Artists"
+     [:form {:tw "space-y-3 min-w-120 relative"}
+
+      ;; overlay
+      (when (not (auth/authed?))
+        [:div {:tw "absolute top-0 -left-2 -right-2 bottom-0 flex items-center justify-center"
+               :style {:background (str rc-green "99")
+                       :backdrop-filter "blur(3px)"}}
+         [:button {:tw "px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
+                   :type "button"
+                   :style {:color rc-green}
+                   :on-click (fn []
+                               (auth/auth!))}
+          "Log In to Edit"]])
+
+      [:fieldset {:disabled (not (auth/authed?))
+                  :style {:margin 0}}
+       [text-input {:label "Title"
                     :*placard *placard
-                    :key :placard/artists}]
-      [text-input {:label "Year"
-                   :*placard *placard
-                   :key :placard/year}]
-      [text-input {:label "Materials"
-                   :*placard *placard
-                   :key :placard/materials}]
-      [textarea-input {:label "Description"
-                       :*placard *placard
-                       :key :placard/description}]]
+                    :key :placard/title}]
+       [array-input {:label "Artists"
+                     :*placard *placard
+                     :key :placard/artists}]
+       [text-input {:label "Year"
+                    :*placard *placard
+                    :key :placard/year}]
+       [text-input {:label "Materials"
+                    :*placard *placard
+                    :key :placard/materials}]
+       [textarea-input {:label "Description"
+                        :*placard *placard
+                        :key :placard/description}]]]
 
      [:div {:tw "grow"}]
 
@@ -91,20 +107,22 @@
                             (js/window.print))}
        "Print"]
       [:div {:tw "grow"}]
-      [:button {:tw "px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
-                :style {:color (if @*saving?
-                                 "gray"
-                                 rc-green)}
-                :disabled @*saving?
-                :on-click (fn [_]
-                            (reset! *saving? true)
-                            (-> (remote/tada! [:api/update-placard! {:placard @*placard}])
-                                (.then (fn [_]
-                                         (reset! *original-placard @*placard)
-                                         (reset! *saving? false)))))}
-       (if @*saving?
-         "Saving..."
-         "Save")]]]))
+
+      (when (auth/authed?)
+        [:button {:tw "px-4 py-2 bg-white rounded font-semibold hover:bg-white/90"
+                  :style {:color (if @*saving?
+                                   "gray"
+                                   rc-green)}
+                  :disabled @*saving?
+                  :on-click (fn [_]
+                              (reset! *saving? true)
+                              (-> (remote/tada! [:api/update-placard! {:placard @*placard}])
+                                  (.then (fn [_]
+                                           (reset! *original-placard @*placard)
+                                           (reset! *saving? false)))))}
+         (if @*saving?
+           "Saving..."
+           "Save")])]]))
 
 (defn page-view
   [[_ {:keys [id]}]]
