@@ -1,8 +1,6 @@
 (ns rchive.db
   (:require
    [bloom.commons.uuid :as uuid]
-   [malli.core :as m]
-   [clojure.edn :as edn]
    [bloom.commons.file-db :as fdb]
    [rchive.config :as config])
   (:import
