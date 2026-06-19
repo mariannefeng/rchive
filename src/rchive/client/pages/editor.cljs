@@ -52,7 +52,7 @@
                          (swap! *placard update key conj ""))} "+"]])
 
 (defn form-view
-  [*placard]
+  [*placard *original-placard]
   (r/with-let [*saving? (r/atom false)]
     [:div#form {:tw "print:hidden text-white p-6 h-screen flex flex-col overflow-y-auto"
                 :style {:background rc-green}}
@@ -77,9 +77,14 @@
      [:div {:tw "grow"}]
 
      [:div {:tw "flex gap-4 items-center mt-4"}
-      [:a {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
-
-           :href (pages/path-for [:page/placard {:id (:placard/id @*placard)}])}
+      [:button {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
+                :on-click
+                (fn []
+                  ;; prevent navigation if dirty
+                  (if (and (not= @*placard @*original-placard)
+                           (not (js/confirm "You have unsaved changes, are you sure you want to leave?"))   )
+                    nil ;; nothing
+                    (pages/navigate-to! [:page/placard {:id (:placard/id @*placard)}])))}
        "Close"]
       [:button {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
                 :on-click (fn [_]
@@ -95,6 +100,7 @@
                             (reset! *saving? true)
                             (-> (remote/tada! [:api/update-placard! {:placard @*placard}])
                                 (.then (fn [_]
+                                         (reset! *original-placard @*placard)
                                          (reset! *saving? false)))))}
        (if @*saving?
          "Saving..."
@@ -103,9 +109,11 @@
 (defn page-view
   [[_ {:keys [id]}]]
   (r/with-let
-   [*placard (r/atom nil)
+   [*original-placard (r/atom nil)
+    *placard (r/atom nil)
     _ (-> (remote/tada! [:api/placard {:id id}])
           (.then (fn [p]
+                   (reset! *original-placard p)
                    (reset! *placard p))))]
 
    [:div {:tw "flex items-start w-full h-screen"}
@@ -121,7 +129,7 @@
 
     [:link {:href "/css/twstyles.css" :media "print" :rel "stylesheet"}]
 
-    [form-view *placard]
+    [form-view *placard *original-placard]
 
     [:div {:tw "bg-gray-100 flex flex-col items-center justify-center grow h-screen"}
      [ui.p/placard-view {:show-qr? true} @*placard]
