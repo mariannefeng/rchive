@@ -6,6 +6,9 @@
   (:import
    [java.time LocalDate]))
 
+(def db-config
+  (delay {:data-path (config/get :data-dir)}))
+
 (def Placard
   [:map
    [:placard/id :uuid]
@@ -14,7 +17,8 @@
    [:placard/artists [:vector :string]]
    [:placard/year :string] ;; TODO int
    [:placard/materials :string]
-   [:placard/description :string]])
+   [:placard/description :string]
+   [:placard/page-content {:optional true} :string]])
 
 (def shortcode-re #"[a-zA-Z0-9]{4}")
 (def shortcode-chars "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -27,7 +31,7 @@
        (apply str)))
 
 (defn all []
-  (fdb/all {:data-path (config/get :data-dir)}))
+  (fdb/all @db-config))
 
 (defn by-shortcode
   [shortcode]
@@ -59,10 +63,10 @@
                 :placard/year (str (.getYear (LocalDate/now)))
                 :placard/materials "Materials"
                 :placard/description "Lorem ipsum..."}]
-   (fdb/write-entity! {:data-path (:repo-dir (config/get :git))} placard)
+   (fdb/write-entity! @db-config placard)
    id))
 
 (defn update!
   [placard]
-  (fdb/write-entity! {:data-path (:repo-dir (config/get :git))} placard))
+  (fdb/write-entity! @db-config placard))
 
