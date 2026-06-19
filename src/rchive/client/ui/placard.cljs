@@ -1,9 +1,13 @@
 (ns rchive.client.ui.placard
   (:require
+   [clojure.string :as string]
+   [markdown.core :as md]
+   [reagent.core :as r]
    [rchive.client.ui.rcqr :as rcqr]
    [rchive.client.remote :as remote]))
 
 (defonce config (remote/tada-atom [:api/config]))
+
 (defn url [shortcode]
   (str (:config/qr-base-domain @config)
        "/"
@@ -32,6 +36,13 @@
   [:div {:tw "font-light"}
    (:placard/description placard)])
 
+(defn page-content
+  [placard]
+  (when (not (string/blank? (:placard/page-content placard)))
+    [:div {:tw "prose"
+           :dangerouslySetInnerHTML
+           (r/unsafe-html (md/md->html (:placard/page-content placard)))}]))
+
 (defn print-cut-markers
   []
   [:<>
@@ -46,7 +57,7 @@
    {:tw "border relative m-4 print:border-transparent break-inside-avoid"}
 
    [:div {:tw "border-l-1em p-10 box-content bg-white"
-          :style {:width "150mm"}}
+          #_#_:style {:width "150mm"}}
 
     [artists placard]
     [:div {:tw "h-4"}]
@@ -54,13 +65,13 @@
     [:div {:tw "h-1"}]
     [materials placard]
 
-    (when show-qr?
-      [:<>
-       [:div {:tw "h-4"}]
-       [:div {:tw "flex gap-10"}
-        [description placard]
+    [:<>
+     [:div {:tw "h-4"}]
+     [:div {:tw "flex gap-10"}
+      [description placard]
+      (when show-qr?
         [rcqr/rc-qr-code {:width "4.25rem"
-                          :text (url (:placard/shortcode placard))}]]])]
+                          :text (url (:placard/shortcode placard))}])]]]
 
    [print-cut-markers]])
 

@@ -2,6 +2,7 @@
   :dependencies [[io.bloomventures/omni "0.36.2"]
                  [io.bloomventures/commons "0.17.1"]
                  [cljsjs/qrcode-generator "1.4.4-0"]
+                 [markdown-clj "1.12.1"]
                  [ring-oauth2 "0.3.0"]
                  [tada "0.3.0"
                   :exclusions [org.clojure/clojure

@@ -29,11 +29,12 @@
                                   (auth/auth! (pages/path-for [:page/editor {:id id}])))))}
          "Edit"]]
 
-       [:div {:tw "ml-2 mt-10 text-center flex flex-col gap-4"}
-        [placard/artists @*placard]
-        [placard/title-and-year @*placard]
-        [placard/materials @*placard]
-        [placard/description @*placard]]])))
+       [:div {:tw "max-w-50em mx-auto"}
+        [placard/placard-horizontal-with-stripe {:show-qr? false} @*placard]
+        [:div {:tw "p-6"}
+         [placard/page-content @*placard]]
+
+        #_[:div.debug (pr-str @*placard)]]])))
 
 (pages/register-page!
  {:page/id :page/placard

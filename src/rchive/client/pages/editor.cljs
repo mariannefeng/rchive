@@ -73,7 +73,8 @@
           "Log In to Edit"]])
 
       [:fieldset {:disabled (not (auth/authed?))
-                  :style {:margin 0}}
+                  :tw "pb-3"
+                  :style {:margin-top 0}}
        [text-input {:label "Title"
                     :*placard *placard
                     :key :placard/title}]
@@ -88,7 +89,14 @@
                     :key :placard/materials}]
        [textarea-input {:label "Description"
                         :*placard *placard
-                        :key :placard/description}]]]
+                        :key :placard/description}]]
+
+      [:fieldset {:disabled (not (auth/authed?))
+                  :tw "bg-gray-600 p-6 -mx-6 mt-12"}
+       [:h2 {:tw "text-sm font-medium mb-4"} "Web-Only Content:"]
+       [textarea-input {:label "Page Content (Markdown)"
+                        :*placard *placard
+                        :key :placard/page-content}]]]
 
      [:div {:tw "grow"}]
 
@@ -149,10 +157,13 @@
 
     [form-view *placard *original-placard]
 
-    [:div {:tw "bg-gray-100 flex flex-col items-center justify-center grow h-screen"}
-     [ui.p/placard-view {:show-qr? true} @*placard]
+    [:div {:tw "bg-gray-100 flex flex-col items-center grow h-screen overflow-y-auto gap-6"}
+     [:div {:tw "py-8"}
+      [ui.p/placard-view {:show-qr? true} @*placard]]
      #_[ui.p/placard-vertical-no-stripe {:show-qr? true} @placard]
-     #_[ui.p/placard-horizontal-with-stripe {:show-qr? true} @placard]]]))
+     #_[ui.p/placard-horizontal-with-stripe {:show-qr? true} @placard]
+     [:div {:tw "print:hidden w-full p-6 bg-gray-300 grow"}
+      [ui.p/page-content @*placard]]]]))
 
 (pages/register-page!
  {:page/id :page/editor

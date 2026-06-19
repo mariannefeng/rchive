@@ -11,6 +11,9 @@
      :omni/cljs {:main "rchive.client.core"}
      :omni/css {:tailwind? true}
      :omni/js-scripts []
+     :omni/html-head-includes
+     [[:link {:rel "stylesheet"
+              :href "/css/markdown.css"}]]
      :omni/auth {:cookie {:name "rchive"
                           :same-site :lax ;; for oauth :(
                           :secret (config/get :auth-cookie-secret)}}
