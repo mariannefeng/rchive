@@ -26,7 +26,7 @@
                               (if (auth/authed?)
                                 (pages/navigate-to! [:page/editor {:id id}])
                                 (when (js/confirm "You need to be logged in to edit. Proceed to Recurse oAuth?")
-                                  (.. js/window.location (assign auth/auth-path)))))}
+                                  (auth/auth! (pages/path-for [:page/editor {:id id}])))))}
          "Edit"]]
 
        [:div {:tw "ml-2 mt-10 text-center flex flex-col gap-4"}

@@ -16,11 +16,12 @@
 
 (check-auth!)
 
-(def auth-path "/oauth/rc")
-
 (defn auth!
-  []
-  (set! js/window.location auth-path))
+  ([]
+   (auth! js/window.location.pathname))
+  ([redirect-path]
+   (set! js/window.location
+         (str "/oauth/rc/initiate?return_to=" redirect-path))))
 
 (defn auth-view
   []
@@ -31,7 +32,9 @@
              :src (:image @*user)}]
       [:a {:tw "px-1 text-white"
            :href "/oauth/log-out"} "×"]]
-     [:a {:tw "px-1 text-white"
-          :href auth-path} "Log In"])])
+     [:button {:tw "px-1 text-white"
+               :on-click (fn []
+                           (auth!))}
+      "Log In"])])
 
 

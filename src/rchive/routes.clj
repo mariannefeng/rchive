@@ -1,5 +1,6 @@
 (ns rchive.routes
   (:require
+   [clojure.string :as str]
    [tada.events.core :as tada]
    [tada.events.ring :as tada.ring]
    [ring.middleware.oauth2 :as oauth]
@@ -99,6 +100,14 @@
      :expires #inst "2026-06-09T19:27:38.392-00:00"
      :refresh-token "REDACTED"}}}
 
+(defn safe-return-path
+  [path]
+  (if (and (string? path)
+           (str/starts-with? path "/")
+           (not (str/starts-with? path "//")))
+    path
+    "/"))
+
 (def routes
   [
    [[:get "/oauth/log-out"]
@@ -106,6 +115,14 @@
       {:status 302
        :session nil
        :headers {"Location" "/"}})]
+
+   [[:get "/oauth/rc/initiate"]
+    (fn [request]
+      {:status 302
+       :session (assoc (:session request)
+                       ::return-to
+                       (safe-return-path (get-in request [:query-params "return_to"])))
+       :headers {"Location" "/oauth/rc"}})]
 
    ;; hack to get oauth-middleware integrated with omni
    [[:any "/oauth/*"]
@@ -116,14 +133,13 @@
     (fn [request]
       {:status 302
        :session {:token (get-in request [:session ::oauth/access-tokens :rc :token])}
-       :headers {"Location" "/"}})
+       :headers {"Location" (get-in request [:session ::return-to] "/")}})
     [oauth-middleware]]
 
    ;; generic tada handler
    [[:post "/api/tada/*"]
     ;; expects body to have {:event-id _ :event-params _}
     (make-tada-handler :body-params)]
-
 
    [[:get "/:shortcode"]
     (fn [request]
