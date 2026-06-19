@@ -7,6 +7,18 @@
         {
           "name": "data",
           "destinationPath": "/app/volume"
+        },
+        {
+          "name": "git",
+          "destinationPath": "/app/mount/git"
+        },
+        {
+          "name": "config",
+          "destinationPath": "/app/mount/config"
+        },
+        {
+          "name": "ssh",
+          "destinationPath": "/app/mount/ssh"
         }
       ]
     }
