@@ -29,7 +29,7 @@
        (apply str)))
 
 (defn all []
-  (fdb/all {:data-path (:repo-dir (config/get :git))}))
+  (fdb/all {:data-path (config/get :data-dir)}))
 
 (defn by-shortcode
   [shortcode]

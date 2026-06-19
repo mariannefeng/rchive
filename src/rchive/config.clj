@@ -30,6 +30,7 @@
       [:environment [:enum :prod :dev]]
       [:auth-cookie-secret :string] ;; 16 chars
       [:qr-base-domain :string]
+      [:data-dir :string]
       [:git [:maybe git/GitConfig]]
       [:oauth OauthConfig]])))
 
