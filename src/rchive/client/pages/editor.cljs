@@ -97,7 +97,7 @@
                                 (.then (fn [_]
                                          (reset! *saving? false)))))}
        (if @*saving?
-         "Loading..."
+         "Saving..."
          "Save")]]]))
 
 (defn page-view
