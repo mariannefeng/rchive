@@ -30,7 +30,7 @@
       [:environment [:enum :prod :dev]]
       [:auth-cookie-secret :string] ;; 16 chars
       [:qr-base-domain :string]
-      [:git git/GitConfig]
+      [:git [:maybe git/GitConfig]]
       [:oauth OauthConfig]])))
 
 (defn get [k]

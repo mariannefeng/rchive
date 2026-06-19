@@ -58,12 +58,14 @@
              :placard db/Placard}
     :effect (fn [{:keys [placard token]}]
               (db/update! placard)
-              (let [{:keys [email first_name last_name]} (rcapi/memo-me token)
-                    git-config (assoc (config/get :git)
+              (when-let [git-config (config/get :git)]
+                (let [{:keys [email first_name last_name]} (rcapi/memo-me token)
+                      git-opts (assoc git-config
                                       :author-email email
                                       :author-name (str first_name " " last_name))]
-                (git/add-commit-and-push! git-config
-                (str "update placard " (:placard/id placard)))))}])
+                  (git/add-commit-and-push!
+                   git-opts
+                   (str "update placard " (:placard/id placard))))))}])
 
 (tada/register! t events)
 
