@@ -18,7 +18,7 @@
          "Back to All"]
 
         [:a {:tw "bg-#23a050 rounded text-white px-2 py-1"
-             :href (pages/path-for [:page/editor {:id id}])}
+             :href (pages/path-for [:page/print {:id id}])}
          "Print"]
 
         [:button {:tw "bg-#23a050 rounded text-white px-2 py-1"

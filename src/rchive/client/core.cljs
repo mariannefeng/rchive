@@ -7,7 +7,8 @@
    ;; register pages:
    [rchive.client.pages.editor]
    [rchive.client.pages.gallery]
-   [rchive.client.pages.placard]))
+   [rchive.client.pages.placard]
+   [rchive.client.pages.print]))
 
 (defn app-view
   []

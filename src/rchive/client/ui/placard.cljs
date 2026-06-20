@@ -8,6 +8,10 @@
 
 (defonce config (remote/tada-atom [:api/config]))
 
+(defn font-stylesheet []
+  [:style
+   "@scope { #placard { font-family: \"Libre Franklin\", sans-serif; }}"])
+
 (defn url [shortcode]
   (str (:config/qr-base-domain @config)
        "/"
@@ -55,6 +59,7 @@
   [{:keys [show-qr?]} placard]
   [:div#placard
    {:tw "border relative m-4 print:border-transparent break-inside-avoid"}
+   [font-stylesheet]
 
    [:div {:tw "border-l-1em p-10 box-content bg-white"
           #_#_:style {:width "150mm"}}
@@ -79,6 +84,7 @@
   [{:keys [show-qr?]} placard]
   [:div#placard
    {:tw "border relative m-4 print:border-transparent break-inside-avoid inline-block"}
+   [font-stylesheet]
 
    [:div {:tw "p-10 box-content bg-white"
           :style {:width "120mm"}}
@@ -108,6 +114,7 @@
   [:div#placard
    {:tw "border relative m-4"
     :style {:min-width "100mm"}}
+   [font-stylesheet]
    [:div {:tw "p-5 box-content bg-white"}
     [artists placard]
     [:div {:tw "text-xl"}

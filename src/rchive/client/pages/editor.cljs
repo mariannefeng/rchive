@@ -110,10 +110,6 @@
                     nil ;; nothing
                     (pages/navigate-to! [:page/placard {:id (:placard/id @*placard)}])))}
        "Close"]
-      [:button {:tw "px-4 py-2 rounded text-white font-semibold hover:bg-white/20"
-                :on-click (fn [_]
-                            (js/window.print))}
-       "Print"]
       [:div {:tw "grow"}]
 
       (when (auth/authed?)
@@ -143,18 +139,6 @@
                    (reset! *placard p))))]
 
    [:div {:tw "flex items-start w-full h-screen"}
-    [:style
-     "@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap');
-     #placard {
-               font-family: \"Libre Franklin\", sans-serif;
-               }"]
-    [:style {:media "print"}
-     ".print\\:hidden {display: none !important}
-     .print\\:border-transparent {border-color: transparent}
-     .print\\:block {display: block !important}"]
-
-    [:link {:href "/css/twstyles.css" :media "print" :rel "stylesheet"}]
-
     [form-view *placard *original-placard]
 
     [:div {:tw "bg-gray-100 flex flex-col items-center grow h-screen overflow-y-auto gap-6"}
